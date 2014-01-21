@@ -1,11 +1,12 @@
 <pre>
-  As a grocery shopper that has entered a few grocery trips into the application
-  I want to get the average price I've paid for a particular item
-  In order to know if the sale in the weekly flyer is any good.
+  As a grocery shopper
+  I want to enter information about my grocery trip
+  In order to be able to query information about it in the future
   
-  Usage: ./grocerytracker stats "Campbell's Chicken Soup"
+  Usage: ./grocerytracker add "Campbell's Chicken Soup" --calories 120 --price 1.50
   
   Acceptance Criteria:
-  * Prints out average/min/max prices I've paid for that item
-  * If the item can't be found, it prints out a list of items with similar names
+  * Saves the purchase in the database
+  * Prints out a summary of what it saved
+  * If price, calories, or name are missing, it doesn't save the record and instead prints an error message
 </pre>

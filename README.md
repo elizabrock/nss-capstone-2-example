@@ -19,8 +19,8 @@ I can never tell if a sale is actually good or if it's just marketing bullshit. 
 
 ## Feature List:
 
-   * I can enter information from my receipt: Product Name, Calories/Unit, Price
-   * I can query for my avg/min/max cost/calorie and /unit on a product
+   * I can enter information from my receipt and products: Product Name, Calories/Unit, Price
+   * I can update/delete information that is incorrect
    * I can look at the full list of products
    * I can get a report of my most and least expensive products per calorie
 
