@@ -9,24 +9,26 @@ options = {}
 OptionParser.new do |opts|
   opts.banner = "Usage: grocerytracker [command] [options]"
 
-  opts.on("-p", "--price", "The price") do |price|
+  opts.on("--price [PRICE]", "The price") do |price|
     options[:price] = price
   end
 
-  opts.on("-c", "--calories", "The calories") do |calories|
+  opts.on("--calories [CALORIES]", "The calories") do |calories|
     options[:calories] = calories
   end
 end.parse!
 
 if name.nil? or name.empty?
   puts "You must provide the name of the product you are adding."
-else
-  missing_things = []
-  unless options[:price]
-    missing_things << "price"
-  end
-  unless options[:calories]
-    missing_things << "total calories"
-  end
-  puts "You must provide the #{missing_things.join(" and ")} of the product you are adding."
+  exit
 end
+
+missing_things = []
+missing_things << "price" unless options[:price]
+missing_things << "total calories" unless options[:calories]
+unless missing_things.empty?
+  puts "You must provide the #{missing_things.join(" and ")} of the product you are adding."
+  exit
+end
+
+puts "Theoretically creating: a purchase named #{name}, with #{options[:calories]} calories and $#{options[:price]} cost"
