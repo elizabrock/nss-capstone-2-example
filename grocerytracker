@@ -1,3 +1,17 @@
 #!/usr/bin/env ruby
 
-puts "You must provide the name of the product you are adding."
+command = ARGV[0]
+arguments = ARGV.drop(1)
+
+if arguments.empty?
+  puts "You must provide the name of the product you are adding."
+else
+  missing_things = []
+  unless arguments.include?("--price")
+    missing_things << "price"
+  end
+  unless arguments.include?("--calories")
+    missing_things << "total calories"
+  end
+  puts "You must provide the #{missing_things.join(" and ")} of the product you are adding."
+end
