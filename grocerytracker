@@ -1,16 +1,31 @@
 #!/usr/bin/env ruby
 
-command = ARGV[0]
-arguments = ARGV.drop(1)
+require 'optparse'
 
-if arguments.empty?
+command = ARGV[0]
+name = ARGV[1]
+options = {}
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: grocerytracker [command] [options]"
+
+  opts.on("-p", "--price", "The price") do |price|
+    options[:price] = price
+  end
+
+  opts.on("-c", "--calories", "The calories") do |calories|
+    options[:calories] = calories
+  end
+end.parse!
+
+if name.nil? or name.empty?
   puts "You must provide the name of the product you are adding."
 else
   missing_things = []
-  unless arguments.include?("--price")
+  unless options[:price]
     missing_things << "price"
   end
-  unless arguments.include?("--calories")
+  unless options[:calories]
     missing_things << "total calories"
   end
   puts "You must provide the #{missing_things.join(" and ")} of the product you are adding."
