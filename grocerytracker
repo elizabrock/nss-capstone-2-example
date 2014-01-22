@@ -8,7 +8,12 @@ options[:name] = ARGV[1]
 error_messages = ParseArguments.validate(options)
 
 if error_messages.empty?
-  puts "Theoretically creating: a purchase named #{options[:name]}, with #{options[:calories]} calories and $#{options[:price]} cost"
+  require "sqlite3"
+  database = SQLite3::Database.new("grocerytracker_test")
+  # This is ripe for a SQL injection attack:
+  statement = "insert into purchases(name, calories, price) values('#{options[:name]}', #{options[:calories]}, #{options[:price]})"
+  database.execute(statement)
+  puts "A purchase named #{options[:name]}, with #{options[:calories]} calories and $#{options[:price]} cost was created."
 else
   puts error_messages
 end
