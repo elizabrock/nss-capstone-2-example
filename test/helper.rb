@@ -1,9 +1,9 @@
 require 'minitest/autorun'
+require_relative '../lib/environment'
 
 class GroceryTest < MiniTest::Unit::TestCase
   def database
-    # memoization
-    @database ||= SQLite3::Database.new("db/grocerytracker_test.sqlite3")
+    Environment.database_connection
   end
 
   def teardown

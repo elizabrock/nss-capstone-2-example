@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 # -*- ruby -*-
 
+require_relative 'lib/environment'
 require 'rake/testtask'
 Rake::TestTask.new() do |t|
   t.pattern = "test/test_*.rb"
@@ -11,6 +12,6 @@ task :default => :test
 
 task :bootstrap_database do
   require 'sqlite3'
-  database = SQLite3::Database.new("db/grocerytracker_test.sqlite3")
+  database = Environment.database_connection
   database.execute("CREATE TABLE purchases (id INTEGER PRIMARY KEY AUTOINCREMENT, name varchar(50), calories integer, price decimal(5,2))")
 end
