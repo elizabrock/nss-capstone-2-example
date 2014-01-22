@@ -6,15 +6,22 @@ require_relative 'lib/parse_arguments'
 command = ARGV[0]
 options = ParseArguments.parse
 options[:name] = ARGV[1]
-error_messages = ParseArguments.validate(options)
 
-if error_messages.empty?
-  require "sqlite3"
-  database = Environment.database_connection(options[:environment])
-  # This is ripe for a SQL injection attack:
-  statement = "insert into purchases(name, calories, price) values('#{options[:name]}', #{options[:calories]}, #{options[:price]})"
-  database.execute(statement)
-  puts "A purchase named #{options[:name]}, with #{options[:calories]} calories and $#{options[:price]} cost was created."
+if command == "search"
+  puts "What do you want to search for?"
+  input = $stdin.gets
+  puts "You asked for: #{input}"
+  # searching!
 else
-  puts error_messages
+  error_messages = ParseArguments.validate(options)
+  if error_messages.empty?
+    require "sqlite3"
+    database = Environment.database_connection(options[:environment])
+    # This is ripe for a SQL injection attack:
+    statement = "insert into purchases(name, calories, price) values('#{options[:name]}', #{options[:calories]}, #{options[:price]})"
+    database.execute(statement)
+    puts "A purchase named #{options[:name]}, with #{options[:calories]} calories and $#{options[:price]} cost was created."
+  else
+    puts error_messages
+  end
 end
