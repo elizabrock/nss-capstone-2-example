@@ -3,7 +3,7 @@ require 'minitest/autorun'
 class GroceryTest < MiniTest::Unit::TestCase
   def database
     # memoization
-    @database ||= SQLite3::Database.new("grocerytracker_test")
+    @database ||= SQLite3::Database.new("db/grocerytracker_test.sqlite3")
   end
 
   def teardown

@@ -11,6 +11,6 @@ task :default => :test
 
 task :bootstrap_database do
   require 'sqlite3'
-  database = SQLite3::Database.new("grocerytracker_test")
+  database = SQLite3::Database.new("db/grocerytracker_test.sqlite3")
   database.execute("CREATE TABLE purchases (id INTEGER PRIMARY KEY AUTOINCREMENT, name varchar(50), calories integer, price decimal(5,2))")
 end
