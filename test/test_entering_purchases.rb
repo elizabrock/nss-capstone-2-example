@@ -38,7 +38,7 @@ class TestEnteringPurchases < MiniTest::Unit::TestCase
 
   def test_error_message_for_missing_name
     command = "./grocerytracker add"
-    expected = "You must provide the name of the product you are adding."
+    expected = "You must provide the name of the product you are adding.\nYou must provide the price and total calories of the product you are adding."
     assert_command_output expected, command
   end
 end

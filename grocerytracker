@@ -1,34 +1,14 @@
 #!/usr/bin/env ruby
 
-require 'optparse'
+require_relative 'lib/parse_arguments'
 
 command = ARGV[0]
-name = ARGV[1]
-options = {}
+options = ParseArguments.parse
+options[:name] = ARGV[1]
+error_messages = ParseArguments.validate(options)
 
-OptionParser.new do |opts|
-  opts.banner = "Usage: grocerytracker [command] [options]"
-
-  opts.on("--price [PRICE]", "The price") do |price|
-    options[:price] = price
-  end
-
-  opts.on("--calories [CALORIES]", "The calories") do |calories|
-    options[:calories] = calories
-  end
-end.parse!
-
-if name.nil? or name.empty?
-  puts "You must provide the name of the product you are adding."
-  exit
+if error_messages.empty?
+  puts "Theoretically creating: a purchase named #{options[:name]}, with #{options[:calories]} calories and $#{options[:price]} cost"
+else
+  puts error_messages
 end
-
-missing_things = []
-missing_things << "price" unless options[:price]
-missing_things << "total calories" unless options[:calories]
-unless missing_things.empty?
-  puts "You must provide the #{missing_things.join(" and ")} of the product you are adding."
-  exit
-end
-
-puts "Theoretically creating: a purchase named #{name}, with #{options[:calories]} calories and $#{options[:price]} cost"
