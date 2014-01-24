@@ -17,7 +17,7 @@ if command == "search"
   statement = "select purchases.name from purchases where name LIKE '%#{input}%'"
   results = database.execute(statement)
   puts results
-else
+elsif command == "add"
   error_messages = ParseArguments.validate(options)
   if error_messages.empty?
     # This is ripe for a SQL injection attack:
@@ -27,4 +27,13 @@ else
   else
     puts error_messages
   end
+elsif command == "list"
+  puts "All Purchases:"
+  puts Purchase.all
+  # ^equivalent to:
+  # Purchase.all.each do |purchase|
+  #   print purchase.to_s + "\n"
+  # end
+else
+  puts "Command not implemented"
 end

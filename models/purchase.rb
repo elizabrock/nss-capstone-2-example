@@ -9,7 +9,17 @@ class Purchase
     end
   end
 
+  def self.all
+    database = Environment.database_connection
+    database.results_as_hash = true
+    results = database.execute("select * from purchases order by name ASC")
+    results.map do |row_hash|
+      Purchase.new(name: row_hash["name"], price: row_hash["price"], calories: row_hash["calories"])
+    end
+  end
+
   def to_s
-    "#{name}: #{calories} calories, $#{price}"
+    formatted_price = sprintf('%.2f', price)
+    "#{name}: #{calories} calories, $#{formatted_price}"
   end
 end

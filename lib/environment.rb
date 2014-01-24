@@ -1,4 +1,5 @@
 require_relative 'database'
+require_relative '../models/purchase'
 require 'logger'
 
 class Environment
