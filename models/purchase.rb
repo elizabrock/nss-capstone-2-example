@@ -9,6 +9,13 @@ class Purchase
     end
   end
 
+  def save
+    database = Environment.database_connection
+    database.execute("insert into purchases(name, calories, price) values('#{name}', #{calories}, #{price})")
+    # ^ fails silently!!
+    # ^ Also, susceptible to SQL injection!
+  end
+
   def self.all
     database = Environment.database_connection
     database.results_as_hash = true

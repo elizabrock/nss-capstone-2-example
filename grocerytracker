@@ -20,10 +20,9 @@ if command == "search"
 elsif command == "add"
   error_messages = ParseArguments.validate(options)
   if error_messages.empty?
-    # This is ripe for a SQL injection attack:
-    statement = "insert into purchases(name, calories, price) values('#{options[:name]}', #{options[:calories]}, #{options[:price]})"
-    database.execute(statement)
-    puts "A purchase named #{options[:name]}, with #{options[:calories]} calories and $#{options[:price]} cost was created."
+    purchase = Purchase.new(name: options[:name], calories: options[:calories], price: options[:price])
+    purchase.save
+    puts "A purchase named #{purchase.name}, with #{purchase.calories} calories and $#{purchase.price} cost was created."
   else
     puts error_messages
   end
