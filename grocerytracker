@@ -7,16 +7,18 @@ command = ARGV[0]
 options = ParseArguments.parse
 options[:name] = ARGV[1]
 
+database = Environment.database_connection(options[:environment])
+
 if command == "search"
   puts "What do you want to search for?"
-  input = $stdin.gets
+  input = $stdin.gets.chomp
   puts "You asked for: #{input}"
-  # searching!
+  statement = "select purchases.name from purchases where name LIKE '%#{input}%'"
+  results = database.execute(statement)
+  puts results
 else
   error_messages = ParseArguments.validate(options)
   if error_messages.empty?
-    require "sqlite3"
-    database = Environment.database_connection(options[:environment])
     # This is ripe for a SQL injection attack:
     statement = "insert into purchases(name, calories, price) values('#{options[:name]}', #{options[:calories]}, #{options[:price]})"
     database.execute(statement)
