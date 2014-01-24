@@ -2,10 +2,13 @@ class Purchase
   attr_accessor :name, :price, :calories
 
   def initialize attributes = {}
-    # Long Way: @price = attributes[:price]
-    # Short Way:
-    attributes.each_pair do |attribute, value|
-      self.send("#{attribute}=", value)
+    # @price = attributes[:price]
+    # @calories = attributes[:calories]
+    # @name = attributes[:name]
+    # ^ Long way
+    # Short way:
+    [:name, :price, :calories].each do |attr|
+      self.send("#{attr}=", attributes[attr])
     end
   end
 
