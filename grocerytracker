@@ -7,7 +7,8 @@ command = ARGV[0]
 options = ParseArguments.parse
 options[:name] = ARGV[1]
 
-database = Environment.database_connection(options[:environment])
+Environment.environment = options[:environment] || "production"
+database = Environment.database_connection
 
 if command == "search"
   puts "What do you want to search for?"
