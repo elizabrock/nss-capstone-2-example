@@ -3,14 +3,7 @@ class Purchase
   attr_reader :id
 
   def initialize attributes = {}
-    # @price = attributes[:price]
-    # @calories = attributes[:calories]
-    # @name = attributes[:name]
-    # ^ Long way
-    # Short way:
-    [:name, :price, :calories].each do |attr|
-      self.send("#{attr}=", attributes[attr])
-    end
+    update_attributes(attributes)
   end
 
   def self.create(attributes = {})
@@ -19,12 +12,34 @@ class Purchase
     purchase
   end
 
+  def update attributes = {}
+    update_attributes(attributes)
+    save
+  end
+
   def save
     database = Environment.database_connection
-    database.execute("insert into purchases(name, calories, price) values('#{name}', #{calories}, #{price})")
-    @id = database.last_insert_row_id
+    if id
+      database.execute("update purchases set name = '#{name}', calories = '#{calories}', price = '#{price}' where id = #{id}")
+    else
+      database.execute("insert into purchases(name, calories, price) values('#{name}', #{calories}, #{price})")
+      @id = database.last_insert_row_id
+    end
     # ^ fails silently!!
     # ^ Also, susceptible to SQL injection!
+  end
+
+  def self.find id
+    database = Environment.database_connection
+    database.results_as_hash = true
+    results = database.execute("select * from purchases where id = #{id}")[0]
+    if results
+      purchase = Purchase.new(name: results["name"], price: results["price"], calories: results["calories"])
+      purchase.send("id=", results["id"])
+      purchase
+    else
+      nil
+    end
   end
 
   def self.all
@@ -38,14 +53,31 @@ class Purchase
     end
   end
 
+  def price
+    sprintf('%.2f', @price) if @price
+  end
+
   def to_s
-    formatted_price = sprintf('%.2f', price)
-    "#{name}: #{calories} calories, $#{formatted_price}, id: #{id}"
+    "#{name}: #{calories} calories, $#{price}, id: #{id}"
   end
 
   protected
 
   def id=(id)
     @id = id
+  end
+
+  def update_attributes(attributes)
+    # @price = attributes[:price]
+    # @calories = attributes[:calories]
+    # @name = attributes[:name]
+    # ^ Long way
+    # Short way:
+    [:name, :price, :calories].each do |attr|
+      if attributes[attr]
+        # self.calories = attributes[:calorie]
+        self.send("#{attr}=", attributes[attr])
+      end
+    end
   end
 end
