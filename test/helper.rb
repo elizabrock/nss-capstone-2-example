@@ -2,8 +2,11 @@ require 'minitest/autorun'
 require_relative '../lib/environment'
 
 class GroceryTest < MiniTest::Unit::TestCase
-  def database
+  def setup
     Environment.environment = "test"
+  end
+
+  def database
     Environment.database_connection
   end
 
