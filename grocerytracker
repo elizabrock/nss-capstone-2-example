@@ -2,44 +2,56 @@
 
 require_relative 'lib/environment'
 require_relative 'lib/parse_arguments'
+require_relative 'lib/interactions'
 
-command = ARGV[0]
-options = ParseArguments.parse
-options[:name] ||= ARGV[1]
+# Router:
+class GroceryTracker
+  include Interactions
 
-Environment.environment = options[:environment] || "production"
-database = Environment.database_connection
+  def main
+    command = ARGV[0]
+    options = ParseArguments.parse
+    options[:name] ||= ARGV[1]
 
-if command == "search"
-  puts "What do you want to search for?"
-  input = $stdin.gets.chomp
-  puts "You asked for: #{input}"
-  statement = "select purchases.name from purchases where name LIKE '%#{input}%'"
-  results = database.execute(statement)
-  puts results
-elsif command == "add"
-  error_messages = ParseArguments.validate(options)
-  if error_messages.empty?
-    purchase = Purchase.new(options)
-    purchase.save
-    puts "A purchase named #{purchase.name}, with #{purchase.calories} calories and $#{purchase.price} cost was created."
-  else
-    puts error_messages
+    Environment.environment = options[:environment] || "production"
+    database = Environment.database_connection
+
+    if command == "search"
+      search_term = ask("What do you want to search for?")
+
+      puts "You asked for: #{search_term}"
+      statement = "select purchases.name from purchases where name LIKE '%#{search_term}%'"
+      results = database.execute(statement)
+      puts results
+    elsif command == "add"
+      error_messages = ParseArguments.validate(options)
+      if error_messages.empty?
+        purchase = Purchase.new(options)
+        purchase.save
+        puts "A purchase named #{purchase.name}, with #{purchase.calories} calories and $#{purchase.price} cost was created."
+      else
+        puts error_messages
+      end
+    elsif command == "list"
+      puts "All Purchases:"
+      puts Purchase.all
+      # ^equivalent to:
+      # Purchase.all.each do |purchase|
+      #   print purchase.to_s + "\n"
+      # end
+    elsif command == "edit"
+      if purchase = Purchase.find(options[:id])
+        purchase.update(options)
+        puts "Purchase #{purchase.id} is now named #{purchase.name}, with #{purchase.calories} calories and $#{purchase.price} cost."
+      else
+        puts "Purchase #{options[:id]} couldn't be found."
+      end
+    else
+      puts "Command not implemented"
+    end
   end
-elsif command == "list"
-  puts "All Purchases:"
-  puts Purchase.all
-  # ^equivalent to:
-  # Purchase.all.each do |purchase|
-  #   print purchase.to_s + "\n"
-  # end
-elsif command == "edit"
-  if purchase = Purchase.find(options[:id])
-    purchase.update(options)
-    puts "Purchase #{purchase.id} is now named #{purchase.name}, with #{purchase.calories} calories and $#{purchase.price} cost."
-  else
-    puts "Purchase #{options[:id]} couldn't be found."
-  end
-else
-  puts "Command not implemented"
 end
+
+
+grocerytracker = GroceryTracker.new()
+grocerytracker.main()
