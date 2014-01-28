@@ -9,6 +9,7 @@ class TestEnteringPurchases < GroceryTest
 
   def test_valid_purchase_gets_saved
     `./grocerytracker add Cheerios --calories 210 --price 1.50 --environment test`
+    database.results_as_hash = false
     results = database.execute("select name, calories, price from purchases")
     expected = ["Cheerios", 210, 1.50]
     assert_equal expected, results[0]
