@@ -12,6 +12,7 @@ class GroceryTest < MiniTest::Unit::TestCase
 
   def teardown
     database.execute("delete from purchases")
+    database.execute("delete from categories")
   end
 
   def assert_command_output expected, command
