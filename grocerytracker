@@ -34,12 +34,7 @@ class GroceryTracker
         puts error_messages
       end
     elsif options[:command] == "list"
-      puts "All Purchases:"
-      puts Purchase.all
-      # ^equivalent to:
-      # Purchase.all.each do |purchase|
-      #   print purchase.to_s + "\n"
-      # end
+      list_purchases()
     elsif options[:command] == "edit"
       if purchase = Purchase.find(options[:id])
         purchase.update(options)
@@ -50,6 +45,11 @@ class GroceryTracker
     else
       puts "Command not implemented"
     end
+  end
+
+  def list_purchases()
+    puts "All Purchases:"
+    puts Purchase.all
   end
 end
 
