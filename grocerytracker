@@ -19,11 +19,7 @@ class GroceryTracker
 
     if options[:command] == "search"
       search_term = ask("What do you want to search for?")
-
-      puts "You asked for: #{search_term}"
-      statement = "select purchases.name from purchases where name LIKE '%#{search_term}%'"
-      results = database.execute(statement)
-      puts results
+      search_purchases_for(search_term)
     elsif options[:command] == "add"
       error_messages = ArgumentParser.validate(options)
       if error_messages.empty?
@@ -51,6 +47,12 @@ class GroceryTracker
     puts "All Purchases:"
     puts Purchase.all
   end
+
+  def search_purchases_for(search_term)
+    puts "You asked for: #{search_term}"
+    puts Purchase.search(search_term)
+  end
+
 end
 
 

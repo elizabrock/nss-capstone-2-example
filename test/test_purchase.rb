@@ -69,11 +69,14 @@ class TestPurchase < GroceryTest
   end
 
   def test_search_returns_appropriate_results
-    Purchase.create(name: "foo", calories: 130, price: 1.50)
-    Purchase.create(name: "Corn", calories: 530, price: 1.00)
-    Purchase.create(name: "Cornflakes", calories: 530, price: 1.00)
-    results = Purchase.search("Corn")
-    assert_equal ["Corn", "Cornflakes"], results.map(&:name)
+    purchase1 = Purchase.create(name: "foo", calories: 130, price: 1)
+    purchase2 = Purchase.create(name: "Corn", calories: 530, price: 1)
+    purchase3 = Purchase.create(name: "Cornflakes", calories: 530, price: 1)
+
+    expected = [purchase2, purchase3]
+    actual = Purchase.search("Corn")
+
+    assert_equal expected, actual
   end
 
   def test_search_returns_empty_array_if_no_results
