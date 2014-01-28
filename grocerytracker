@@ -7,23 +7,26 @@ require_relative 'lib/interactions'
 # Router:
 class GroceryTracker
   include Interactions
+  attr_reader :options
+
+  def initialize
+    @options = ParseArguments.parse
+    @options[:name] ||= ARGV[1]
+    @options[:command] = ARGV[0]
+    Environment.environment = @options[:environment] || "production"
+  end
 
   def main
-    command = ARGV[0]
-    options = ParseArguments.parse
-    options[:name] ||= ARGV[1]
-
-    Environment.environment = options[:environment] || "production"
     database = Environment.database_connection
 
-    if command == "search"
+    if options[:command] == "search"
       search_term = ask("What do you want to search for?")
 
       puts "You asked for: #{search_term}"
       statement = "select purchases.name from purchases where name LIKE '%#{search_term}%'"
       results = database.execute(statement)
       puts results
-    elsif command == "add"
+    elsif options[:command] == "add"
       error_messages = ParseArguments.validate(options)
       if error_messages.empty?
         purchase = Purchase.new(options)
@@ -32,14 +35,14 @@ class GroceryTracker
       else
         puts error_messages
       end
-    elsif command == "list"
+    elsif options[:command] == "list"
       puts "All Purchases:"
       puts Purchase.all
       # ^equivalent to:
       # Purchase.all.each do |purchase|
       #   print purchase.to_s + "\n"
       # end
-    elsif command == "edit"
+    elsif options[:command] == "edit"
       if purchase = Purchase.find(options[:id])
         purchase.update(options)
         puts "Purchase #{purchase.id} is now named #{purchase.name}, with #{purchase.calories} calories and $#{purchase.price} cost."
