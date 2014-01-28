@@ -72,6 +72,14 @@ class Purchase
     "#{name}: #{calories} calories, $#{price}, id: #{id}"
   end
 
+  def ==(other)
+    if other.is_a? Purchase
+      self.to_s == other.to_s
+    else
+      false
+    end
+  end
+
   protected
 
   def id=(id)

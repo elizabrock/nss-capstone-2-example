@@ -102,4 +102,26 @@ class TestPurchase < GroceryTest
     results = Purchase.all
     assert_equal [], results
   end
+
+  def test_equality_on_same_object
+    purchase = Purchase.create(name: "foo", calories: 130, price: 1.50)
+    assert purchase == purchase
+  end
+
+  def test_equality_with_different_class
+    purchase = Purchase.create(name: "foo", calories: 130, price: 1.50)
+    refute purchase == "Purchase"
+  end
+
+  def test_equality_with_different_purchase
+    purchase1 = Purchase.create(name: "foo", calories: 130, price: 1.50)
+    purchase2 = Purchase.create(name: "bar", calories: 130, price: 1.50)
+    refute purchase1 == purchase2
+  end
+
+  def test_equality_with_same_purchase_different_object_id
+    purchase1 = Purchase.create(name: "foo", calories: 130, price: 1.50)
+    purchase2 = Purchase.find(purchase1.id)
+    assert purchase1 == purchase2
+  end
 end
