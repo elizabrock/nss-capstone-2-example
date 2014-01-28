@@ -42,6 +42,17 @@ class Purchase
     end
   end
 
+  def self.search(search_term)
+    database = Environment.database_connection
+    database.results_as_hash = true
+    results = database.execute("select purchases.name from purchases where name LIKE '%#{search_term}%'")
+    results.map do |row_hash|
+      purchase = Purchase.new(name: row_hash["name"], price: row_hash["price"], calories: row_hash["calories"])
+      purchase.send("id=", row_hash["id"])
+      purchase
+    end
+  end
+
   def self.all
     database = Environment.database_connection
     database.results_as_hash = true

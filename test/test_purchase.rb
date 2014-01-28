@@ -60,6 +60,30 @@ class TestPurchase < GroceryTest
     assert_equal purchase.id, found.id
   end
 
+  def test_search_returns_purchase_objects
+    Purchase.create(name: "foo", calories: 130, price: 1.50)
+    Purchase.create(name: "Corn", calories: 530, price: 1.00)
+    Purchase.create(name: "Cornflakes", calories: 530, price: 1.00)
+    results = Purchase.search("Corn")
+    assert results.all?{ |result| result.is_a? Purchase }, "Not all results were Purchases"
+  end
+
+  def test_search_returns_appropriate_results
+    Purchase.create(name: "foo", calories: 130, price: 1.50)
+    Purchase.create(name: "Corn", calories: 530, price: 1.00)
+    Purchase.create(name: "Cornflakes", calories: 530, price: 1.00)
+    results = Purchase.search("Corn")
+    assert_equal ["Corn", "Cornflakes"], results.map(&:name)
+  end
+
+  def test_search_returns_empty_array_if_no_results
+    Purchase.create(name: "foo", calories: 130, price: 1.50)
+    Purchase.create(name: "Corn", calories: 530, price: 1.00)
+    Purchase.create(name: "Cornflakes", calories: 530, price: 1.00)
+    results = Purchase.search("Soda")
+    assert_equal [], results
+  end
+
   def test_all_returns_all_purchases_in_alphabetical_order
     Purchase.create(name: "foo", calories: 130, price: 1.50)
     Purchase.create(name: "bar", calories: 530, price: 1.00)
