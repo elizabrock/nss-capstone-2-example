@@ -1,6 +1,6 @@
 require 'optparse'
 
-class ParseArguments
+class ArgumentParser
   def self.parse
     options = { environment: "production" }
     OptionParser.new do |opts|
@@ -26,6 +26,8 @@ class ParseArguments
         options[:environment] = env
       end
     end.parse!
+    options[:name] ||= ARGV[1]
+    options[:command] = ARGV[0]
     options
   end
 

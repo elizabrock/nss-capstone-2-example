@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require_relative 'lib/environment'
-require_relative 'lib/parse_arguments'
+require_relative 'lib/argument_parser'
 require_relative 'lib/interactions'
 
 # Router:
@@ -10,9 +10,7 @@ class GroceryTracker
   attr_reader :options
 
   def initialize
-    @options = ParseArguments.parse
-    @options[:name] ||= ARGV[1]
-    @options[:command] = ARGV[0]
+    @options = ArgumentParser.parse
     Environment.environment = @options[:environment] || "production"
   end
 
@@ -27,7 +25,7 @@ class GroceryTracker
       results = database.execute(statement)
       puts results
     elsif options[:command] == "add"
-      error_messages = ParseArguments.validate(options)
+      error_messages = ArgumentParser.validate(options)
       if error_messages.empty?
         purchase = Purchase.new(options)
         purchase.save
