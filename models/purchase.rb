@@ -1,5 +1,5 @@
 class Purchase
-  attr_accessor :name, :price, :calories
+  attr_accessor :name, :price, :calories, :category
   attr_reader :id
 
   def initialize attributes = {}
@@ -27,10 +27,11 @@ class Purchase
 
   def save
     database = Environment.database_connection
+    category_id = category.nil? ? "NULL" : category.id
     if id
-      database.execute("update purchases set name = '#{name}', calories = '#{calories}', price = '#{price}' where id = #{id}")
+      database.execute("update purchases set name = '#{name}', calories = '#{calories}', price = '#{price}', category_id = #{category_id} where id = #{id}")
     else
-      database.execute("insert into purchases(name, calories, price) values('#{name}', #{calories}, #{price})")
+      database.execute("insert into purchases(name, calories, price, category_id) values('#{name}', #{calories}, #{price}, #{category_id})")
       @id = database.last_insert_row_id
     end
     # ^ fails silently!!
@@ -55,7 +56,14 @@ class Purchase
     database.results_as_hash = true
     results = database.execute("select purchases.* from purchases where name LIKE '%#{search_term}%' order by name ASC")
     results.map do |row_hash|
-      purchase = Purchase.new(name: row_hash["name"], price: row_hash["price"], calories: row_hash["calories"])
+      purchase = Purchase.new(
+                  name: row_hash["name"],
+                  price: row_hash["price"],
+                  calories: row_hash["calories"])
+      # Ideally: purchase.category = Category.find(row_hash["category_id"])
+      # Not Ideally :(
+      category = Category.all.find{|category| category.id == row_hash["category_id"]}
+      purchase.category = category
       purchase.send("id=", row_hash["id"])
       purchase
     end
@@ -93,7 +101,7 @@ class Purchase
     # @name = attributes[:name]
     # ^ Long way
     # Short way:
-    [:name, :price, :calories].each do |attr|
+    [:name, :price, :calories, :category].each do |attr|
       if attributes[attr]
         # self.calories = attributes[:calorie]
         self.send("#{attr}=", attributes[attr])

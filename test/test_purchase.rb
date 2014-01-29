@@ -47,6 +47,23 @@ class TestPurchase < GroceryTest
     refute_nil purchase.id, "Purchase id shouldn't be nil"
   end
 
+  def test_save_saves_category_id
+    category = Category.find_or_create("Meats")
+    purchase = Purchase.create(name: "Foo", price: "1.50", calories: "10", category: category)
+    category_id = database.execute("select category_id from purchases where id='#{purchase.id}'")[0][0]
+    assert_equal category.id, category_id, "Category.id and purchase.category_id should be the same"
+  end
+
+  def test_save_update_category_id
+    category1 = Category.find_or_create("Meats")
+    category2 = Category.find_or_create("Veggies")
+    purchase = Purchase.create(name: "Foo", price: "1.50", calories: "10", category: category1)
+    purchase.category = category2
+    purchase.save
+    category_id = database.execute("select category_id from purchases where id='#{purchase.id}'")[0][0]
+    assert_equal category2.id, category_id, "Category2.id and purchase.category_id should be the same"
+  end
+
   def test_find_returns_nil_if_unfindable
     assert_nil Purchase.find(12342)
   end

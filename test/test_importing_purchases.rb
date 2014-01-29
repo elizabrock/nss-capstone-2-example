@@ -12,12 +12,13 @@ class TestImportingPurchases < GroceryTest
   end
 
   def test_purchases_are_imported_fully
-    skip
     import_data
-    expected = ["Panera Soup, 5.50, 450, Soups",
-    "Corn Flakes, 4.00, 3000, Cereals",
-    "Rice Krispies, 3.40, 2000, Cereals",
-    "Panera Sandwich, 4.00, 450, Prepared Meals"]
+    expected = [
+      "Corn Flakes, 4.00, 3000, Cereals",
+      "Panera Sandwich, 4.00, 450, Prepared Meals",
+      "Panera Soup, 5.50, 450, Soups",
+      "Rice Krispies, 3.40, 2000, Cereals",
+    ]
     actual = Purchase.all.map do |product|
       "#{product.name}, #{product.price}, #{product.calories}, #{product.category.name}"
     end
