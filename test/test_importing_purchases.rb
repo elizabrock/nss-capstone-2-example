@@ -32,8 +32,8 @@ class TestImportingPurchases < GroceryTest
 
   def test_categories_are_created_as_needed
     skip
-    Category.create(name: "Cereals")
-    Category.create(name: "Pets")
+    Category.find_or_create("Cereals")
+    Category.find_or_create("Pets")
     import_data
     assert_equal 4, Category.all.count, "The categories were: #{Category.all.map(&:name)}"
   end

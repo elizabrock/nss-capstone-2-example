@@ -21,11 +21,19 @@ class Category
     end
   end
 
-  def self.create name
-    category = Category.new(name)
+  def self.find_or_create name
     database = Environment.database_connection
-    database.execute("insert into categories(name) values('#{category.name}')")
-    category.send("id=", database.last_insert_row_id)
+    database.results_as_hash = true
+    results = database.execute("select * from categories where name = '#{name}'")
+    category = Category.new(name)
+
+    if results.empty?
+      database.execute("insert into categories(name) values('#{category.name}')")
+      category.send("id=", database.last_insert_row_id)
+    else
+      row_hash = results[0]
+      category.send("id=", row_hash["id"])
+    end
     category
   end
 

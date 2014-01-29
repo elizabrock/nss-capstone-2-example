@@ -4,7 +4,7 @@ class Importer
   def self.import(from_filename)
     CSV.foreach(from_filename, headers: true) do |row_hash|
       import_product(row_hash)
-      Category.create(row_hash["category"])
+      Category.find_or_create(row_hash["category"])
     end
   end
 
