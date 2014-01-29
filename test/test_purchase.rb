@@ -29,7 +29,7 @@ class TestPurchase < GroceryTest
   def test_update_is_reflected_in_existing_instance
     purchase = Purchase.create(name: "Foo", price: "1.50", calories: "10")
     purchase.update(name: "Bar", price: "2.50", calories: "20")
-    expected = ["Bar", "2.50", "20" ]
+    expected = ["Bar", "2.50", 20 ]
     actual = [ purchase.name, purchase.price, purchase.calories]
     assert_equal expected, actual
   end

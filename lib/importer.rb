@@ -2,14 +2,9 @@ require 'csv'
 
 class Importer
   def self.import(from_filename)
-    categories_to_create = []
     CSV.foreach(from_filename, headers: true) do |row_hash|
       import_product(row_hash)
-      categories_to_create << row_hash["category"]
-    end
-
-    categories_to_create.uniq.each do |name|
-      Category.create(name: name)
+      Category.create(row_hash["category"])
     end
   end
 
