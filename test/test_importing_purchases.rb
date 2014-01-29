@@ -25,13 +25,11 @@ class TestImportingPurchases < GroceryTest
   end
 
   def test_extra_categories_arent_created
-    skip
     import_data
     assert_equal 3, Category.all.count
   end
 
   def test_categories_are_created_as_needed
-    skip
     Category.find_or_create("Cereals")
     Category.find_or_create("Pets")
     import_data
@@ -39,7 +37,6 @@ class TestImportingPurchases < GroceryTest
   end
 
   def test_data_isnt_duplicated
-    skip
     import_data
     expected = ["Cereals", "Prepared Meals", "Soups"]
     assert_equal expected, Category.all.map(&:name)

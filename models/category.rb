@@ -24,8 +24,8 @@ class Category
   def self.find_or_create name
     database = Environment.database_connection
     database.results_as_hash = true
-    results = database.execute("select * from categories where name = '#{name}'")
     category = Category.new(name)
+    results = database.execute("select * from categories where name = '#{category.name}'")
 
     if results.empty?
       database.execute("insert into categories(name) values('#{category.name}')")
