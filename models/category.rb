@@ -3,7 +3,11 @@ class Category
   attr_reader :id
 
   def initialize(attributes = {})
-    @name = attributes[:name]
+    self.name = attributes[:name]
+  end
+
+  def name=(name)
+    @name = name.strip
   end
 
   def self.all

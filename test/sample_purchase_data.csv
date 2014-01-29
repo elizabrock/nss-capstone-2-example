@@ -1,5 +1,5 @@
-product, price, calories, category
-Panera Soup, 5.50, 450, Soups
-Corn Flakes, 4.00, 3000, Cereals
-Rice Krispies, 3.40, 2000, Cereals
-Panera Sandwich, 4.00, 450, Prepared Meals
+product,price,calories,category
+Panera Soup,5.5,450, Soups
+Corn Flakes,4,3000, Cereals
+Rice Krispies,3.4,2000, Cereals
+Panera Sandwich,4,450, Prepared Meals

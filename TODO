@@ -1,5 +1,7 @@
 Import some simple stuff
 Relationships between models
+Refactor Category.new to just take name
+
 Import harder stuff
 Joins!
 Implement .count

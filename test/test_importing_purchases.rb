@@ -30,10 +30,10 @@ class TestImportingPurchases < GroceryTest
   end
 
   def test_categories_are_created_as_needed
-    Category.create("Cereals")
-    Category.create("Pets")
+    Category.create(name: "Cereals")
+    Category.create(name: "Pets")
     import_data
-    assert_equal 4, Category.all.count
+    assert_equal 4, Category.all.count, "The categories were: #{Category.all.map(&:name)}"
   end
 
   def test_data_isnt_duplicated
