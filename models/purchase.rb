@@ -6,6 +6,14 @@ class Purchase
     update_attributes(attributes)
   end
 
+  def price=(price)
+    @price = price.to_f
+  end
+
+  def calories=(calories)
+    @calories = calories.to_i
+  end
+
   def self.create(attributes = {})
     purchase = Purchase.new(attributes)
     purchase.save

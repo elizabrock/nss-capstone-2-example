@@ -6,13 +6,12 @@ class TestImportingPurchases < GroceryTest
     Importer.import("test/sample_purchase_data.csv")
   end
 
-  def test_the_correct_number_of_products_are_imported
-    skip
+  def test_the_correct_number_of_purchases_are_imported
     import_data
-    assert 4, Purchase.all.count
+    assert_equal 4, Purchase.all.count
   end
 
-  def test_products_are_imported_fully
+  def test_purchases_are_imported_fully
     skip
     import_data
     expected = ["Panera Soup, 5.50, 450, Soups",
@@ -26,23 +25,23 @@ class TestImportingPurchases < GroceryTest
   end
 
   def test_extra_categories_arent_created
-    skip
     import_data
-    assert 3, Category.all.count
+    assert_equal 3, Category.all.count
   end
 
   def test_categories_are_created_as_needed
-    skip
     Category.create("Cereals")
     Category.create("Pets")
     import_data
-    assert 4, Category.all.count
+    assert_equal 4, Category.all.count
   end
 
   def test_data_isnt_duplicated
-    skip
     import_data
     expected = ["Cereals", "Prepared Meals", "Soups"]
     assert_equal expected, Category.all.map(&:name)
+    # ^equivalent:
+    # category_names = Category.all.map{ |category| category.name }
+    # assert_equal expected, category_names
   end
 end
