@@ -21,14 +21,7 @@ class GroceryTracker
       search_term = ask("What do you want to search for?")
       search_purchases_for(search_term)
     elsif options[:command] == "add"
-      error_messages = ArgumentParser.validate(options)
-      if error_messages.empty?
-        purchase = Purchase.new(options)
-        purchase.save
-        puts "A purchase named #{purchase.name}, with #{purchase.calories} calories and $#{purchase.price} cost was created."
-      else
-        puts error_messages
-      end
+      add_purchase()
     elsif options[:command] == "list"
       list_purchases()
     elsif options[:command] == "edit"
@@ -53,6 +46,31 @@ class GroceryTracker
     puts Purchase.search(search_term)
   end
 
+  def add_purchase
+    error_messages = ArgumentParser.validate(options)
+    options[:category] = get_category()
+    if error_messages.empty?
+      purchase = Purchase.new(options)
+      purchase.save
+      puts "A purchase named #{purchase.name} (#{purchase.category.name}), with #{purchase.calories} calories and $#{purchase.price} cost was created."
+    else
+      puts error_messages.join(" ")
+    end
+  end
+
+  def get_category
+    query = "Choose a category:"
+    categories = Category.all
+    categories.each_with_index do |category, i|
+      query << "#{i+1}. #{category.name}"
+    end
+    category_number = ask(query)
+    if category_number.empty?
+      Category.default
+    else
+      categories[category_number.to_i - 1]
+    end
+  end
 end
 
 

@@ -1,14 +1,54 @@
 require_relative 'helper'
 
 class TestEnteringPurchases < GroceryTest
+  def test_user_is_presented_with_category_list
+    cat1 = Category.find_or_create("Foo")
+    cat2 = Category.find_or_create("Bar")
+    cat3 = Category.find_or_create("Cereal")
+    shell_output = ""
+    IO.popen('./grocerytracker add Cheerios --calories 210 --price 1.50 --environment test', 'r+') do |pipe|
+      pipe.puts "2"
+      shell_output = pipe.read
+    end
+    assert_includes_in_order shell_output,
+      "Choose a category:",
+      "1. Bar",
+      "2. Cereal",
+      "3. Foo"
+  end
+
+  def test_user_chooses_category
+    cat1 = Category.find_or_create("Foo")
+    cat2 = Category.find_or_create("Bar")
+    cat3 = Category.find_or_create("Cereal")
+    shell_output = ""
+    IO.popen('./grocerytracker add Cheerios --calories 210 --price 1.50 --environment test', 'r+') do |pipe|
+      pipe.puts "2"
+      shell_output = pipe.read
+    end
+    expected = "A purchase named Cheerios (Cereal), with 210 calories and $1.50 cost was created."
+    assert_in_output shell_output, expected
+  end
+
+  def test_user_skips_entering_category
+    cat3 = Category.find_or_create("Cereal")
+    shell_output = ""
+    IO.popen('./grocerytracker add Cheerios --calories 210 --price 1.50 --environment test', 'r+') do |pipe|
+      pipe.puts ""
+      shell_output = pipe.read
+    end
+    expected = "A purchase named Cheerios (Unknown), with 210 calories and $1.50 cost was created."
+    assert_in_output shell_output, expected
+  end
+
   def test_valid_purchase_information_gets_printed
     command = "./grocerytracker add Cheerios --calories 210 --price 1.50"
-    expected = "A purchase named Cheerios, with 210 calories and $1.50 cost was created."
+    expected = "A purchase named Cheerios (Unknown), with 210 calories and $1.50 cost was created."
     assert_command_output expected, command
   end
 
   def test_valid_purchase_gets_saved
-    `./grocerytracker add Cheerios --calories 210 --price 1.50 --environment test`
+    execute_popen("./grocerytracker add Cheerios --calories 210 --price 1.50 --environment test")
     database.results_as_hash = false
     results = database.execute("select name, calories, price from purchases")
     expected = ["Cheerios", 210, 1.50]
@@ -19,7 +59,7 @@ class TestEnteringPurchases < GroceryTest
   end
 
   def test_invalid_purchase_doesnt_get_saved
-    `./grocerytracker add Cheerios --calories 210`
+    execute_popen("./grocerytracker add Cheerios --calories 210")
     result = database.execute("select count(id) from purchases")
     assert_equal 0, result[0][0]
   end
@@ -42,10 +82,9 @@ class TestEnteringPurchases < GroceryTest
     assert_command_output expected, command
   end
 
-
   def test_error_message_for_missing_name
     command = "./grocerytracker add"
-    expected = "You must provide the name of the product you are adding.\nYou must provide the price and total calories of the product you are adding."
+    expected = "You must provide the name of the product you are adding. You must provide the price and total calories of the product you are adding."
     assert_command_output expected, command
   end
 end

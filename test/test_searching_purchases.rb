@@ -2,9 +2,9 @@ require_relative 'helper'
 
 class TestSearchingPurchases < GroceryTest
   def test_search_returns_relevant_results
-    `./grocerytracker add Cheerios --calories 210 --price 1.50 --environment test`
-    `./grocerytracker add "Corn Flakes" --calories 210 --price 1.50 --environment test`
-    `./grocerytracker add "Corn Bran" --calories 210 --price 1.50 --environment test`
+    Purchase.create(name: "Cheerios", calories: 210, price: 1.50)
+    Purchase.create(name: "Corn Flakes", calories: 210, price: 1.50)
+    Purchase.create(name: "Corn Bran", calories: 210, price: 1.50)
 
     shell_output = ""
     IO.popen('./grocerytracker search --environment test', 'r+') do |pipe|

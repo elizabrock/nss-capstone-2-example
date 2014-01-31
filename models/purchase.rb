@@ -4,6 +4,7 @@ class Purchase
 
   def initialize attributes = {}
     update_attributes(attributes)
+    self.category ||= Category.default
   end
 
   def price=(price)

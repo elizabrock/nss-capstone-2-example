@@ -2,6 +2,10 @@ class Category
   attr_accessor :name
   attr_reader :id
 
+  def self.default
+    @@default ||= Category.find_or_create("Unknown")
+  end
+
   def initialize(name)
     self.name = name
   end

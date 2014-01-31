@@ -2,6 +2,11 @@ require_relative 'helper'
 require_relative '../models/purchase'
 
 class TestPurchase < GroceryTest
+  def test_category_defaults_to_unknown
+    purchase = Purchase.create(name: "Foo", price: "1.50", calories: "10")
+    assert_equal "Unknown", purchase.category.name
+  end
+
   def test_to_s_prints_details
     purchase = Purchase.new(name: "Foo", price: "1.50", calories: "10")
     expected = "Foo: 10 calories, $1.50, id: #{purchase.id}"
