@@ -1,5 +1,4 @@
 require_relative 'helper'
-require_relative '../models/purchase'
 
 class TestPurchase < GroceryTest
   def test_category_defaults_to_unknown

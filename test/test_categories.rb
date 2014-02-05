@@ -1,5 +1,4 @@
 require_relative 'helper'
-require_relative '../models/category'
 
 class TestCategories < GroceryTest
   def test_categories_are_created_if_needed
