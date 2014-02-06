@@ -27,14 +27,18 @@ class GroceryTracker
     elsif command == "list"
       list_purchases()
     elsif command == "edit"
-      if purchase = Purchase.find_by(id: options[:id])
-        purchase.update(options)
-        puts "Purchase #{purchase.id} is now named #{purchase.name}, with #{purchase.calories} calories and #{purchase.formatted_price} cost."
-      else
-        puts "Purchase #{options[:id]} couldn't be found."
-      end
+      edit_purchase()
     else
       puts "Command not implemented"
+    end
+  end
+
+  def edit_purchase()
+    if purchase = Purchase.find_by(id: options[:id])
+      purchase.update(options)
+      puts "Purchase #{purchase.id} is now named #{purchase.name}, with #{purchase.calories} calories and #{purchase.formatted_price} cost."
+    else
+      puts "Purchase #{options[:id]} couldn't be found."
     end
   end
 
