@@ -4,15 +4,13 @@ require_relative '../lib/environment'
 class GroceryTest < MiniTest::Unit::TestCase
   def setup
     Environment.environment = "test"
-  end
-
-  def database
-    Environment.database_connection
+    Environment.connect_to_database
   end
 
   def teardown
-    database.execute("delete from purchases")
-    database.execute("delete from categories")
+    # The Database Cleaner gem will do this for us:
+    Category.destroy_all
+    Purchase.destroy_all
   end
 
   def execute_popen command

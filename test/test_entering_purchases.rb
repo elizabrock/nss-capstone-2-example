@@ -2,9 +2,9 @@ require_relative 'helper'
 
 class TestEnteringPurchases < GroceryTest
   def test_user_is_presented_with_category_list
-    cat1 = Category.find_or_create("Foo")
-    cat2 = Category.find_or_create("Bar")
-    cat3 = Category.find_or_create("Cereal")
+    cat1 = Category.find_or_create_by(name: "Foo")
+    cat2 = Category.find_or_create_by(name: "Bar")
+    cat3 = Category.find_or_create_by(name: "Cereal")
     shell_output = ""
     IO.popen('./grocerytracker add Cheerios --calories 210 --price 1.50 --environment test', 'r+') do |pipe|
       pipe.puts "2"
@@ -18,9 +18,9 @@ class TestEnteringPurchases < GroceryTest
   end
 
   def test_user_chooses_category
-    cat1 = Category.find_or_create("Foo")
-    cat2 = Category.find_or_create("Bar")
-    cat3 = Category.find_or_create("Cereal")
+    cat1 = Category.find_or_create_by(name: "Foo")
+    cat2 = Category.find_or_create_by(name: "Bar")
+    cat3 = Category.find_or_create_by(name: "Cereal")
     shell_output = ""
     IO.popen('./grocerytracker add Cheerios --calories 210 --price 1.50 --environment test', 'r+') do |pipe|
       pipe.puts "2"
@@ -31,7 +31,7 @@ class TestEnteringPurchases < GroceryTest
   end
 
   def test_user_skips_entering_category
-    cat3 = Category.find_or_create("Cereal")
+    cat3 = Category.find_or_create_by(name: "Cereal")
     shell_output = ""
     IO.popen('./grocerytracker add Cheerios --calories 210 --price 1.50 --environment test', 'r+') do |pipe|
       pipe.puts ""
@@ -50,7 +50,7 @@ class TestEnteringPurchases < GroceryTest
   def test_valid_purchase_gets_saved
     execute_popen("./grocerytracker add Cheerios --calories 210 --price 1.50 --environment test")
     purchase = Purchase.all.first
-    expected = ["Cheerios", 210, "1.50"]
+    expected = ["Cheerios", 210, 1.50]
     actual = [purchase.name, purchase.calories, purchase.price]
     assert_equal expected, actual
     assert_equal 1, Purchase.count
