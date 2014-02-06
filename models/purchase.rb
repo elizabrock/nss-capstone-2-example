@@ -5,14 +5,6 @@ class Purchase < ActiveRecord::Base
 
   before_create :set_default_category
 
-  # def price=(price)
-  #   @price = price.to_f
-  # end
-
-  # def calories=(calories)
-  #   @calories = calories.to_i
-  # end
-
   def self.search(search_term = nil)
     Purchase.where("name LIKE ?", "%#{search_term}%").to_a
   end
