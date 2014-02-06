@@ -65,7 +65,7 @@ class TestPurchase < GroceryTest
   def test_save_saves_category_id
     category = Category.find_or_create("Meats")
     purchase = Purchase.create(name: "Foo", price: "1.50", calories: "10", category: category)
-    category_id = database.execute("select category_id from purchases where id='#{purchase.id}'")[0][0]
+    category_id = Purchase.find(purchase.id).category.id
     assert_equal category.id, category_id, "Category.id and purchase.category_id should be the same"
   end
 
@@ -75,7 +75,7 @@ class TestPurchase < GroceryTest
     purchase = Purchase.create(name: "Foo", price: "1.50", calories: "10", category: category1)
     purchase.category = category2
     purchase.save
-    category_id = database.execute("select category_id from purchases where id='#{purchase.id}'")[0][0]
+    category_id = Purchase.find(purchase.id).category.id
     assert_equal category2.id, category_id, "Category2.id and purchase.category_id should be the same"
   end
 
@@ -84,12 +84,23 @@ class TestPurchase < GroceryTest
   end
 
   def test_find_returns_the_row_as_purchase_object
-    purchase = Purchase.create(name: "Foo", price: "1.50", calories: "10")
+    category = Category.find_or_create("Things")
+    purchase = Purchase.create(name: "Foo", price: "1.50", calories: "10", category: category)
     found = Purchase.find(purchase.id)
     # Ideally: assert_equal purchase, found
     # Hacky way so that we can focus on today's material:
     assert_equal purchase.name, found.name
     assert_equal purchase.id, found.id
+    assert_equal purchase.calories, found.calories
+    assert_equal purchase.price, found.price
+  end
+
+  def test_find_returns_the_purchase_with_correct_category
+    category = Category.find_or_create("Things")
+    purchase = Purchase.create(name: "Foo", price: "1.50", calories: "10", category: category)
+    found = Purchase.find(purchase.id)
+    refute_equal Category.default.id, found.category.id
+    assert_equal category.id, found.category.id
   end
 
   def test_search_returns_purchase_objects

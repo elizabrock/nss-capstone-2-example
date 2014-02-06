@@ -49,10 +49,10 @@ class TestEnteringPurchases < GroceryTest
 
   def test_valid_purchase_gets_saved
     execute_popen("./grocerytracker add Cheerios --calories 210 --price 1.50 --environment test")
-    database.results_as_hash = false
-    results = database.execute("select name, calories, price from purchases")
-    expected = ["Cheerios", 210, 1.50]
-    assert_equal expected, results[0]
+    purchase = Purchase.all.first
+    expected = ["Cheerios", 210, "1.50"]
+    actual = [purchase.name, purchase.calories, purchase.price]
+    assert_equal expected, actual
     assert_equal 1, Purchase.count
   end
 
