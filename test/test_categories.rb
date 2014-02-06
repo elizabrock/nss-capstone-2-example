@@ -1,18 +1,29 @@
 require_relative 'helper'
 
 class TestCategories < GroceryTest
+  def test_count_when_no_categories
+    assert_equal 0, Category.count
+  end
+
+  def test_count_of_multiple_categories
+    Category.find_or_create("foo")
+    Category.find_or_create("Corn")
+    Category.find_or_create("Cornflakes")
+    assert_equal 3, Category.count
+  end
+
   def test_categories_are_created_if_needed
-    foos_before = database.execute("select count(id) from categories")[0][0]
+    foos_before = Category.count
     Category.find_or_create("Foo")
-    foos_after = database.execute("select count(id) from categories")[0][0]
+    foos_after = Category.count
     assert_equal foos_before + 1, foos_after
   end
 
   def test_categories_are_not_created_if_they_already_exist
     Category.find_or_create("Foo")
-    foos_before = database.execute("select count(id) from categories")[0][0]
+    foos_before = Category.count
     Category.find_or_create("Foo")
-    foos_after = database.execute("select count(id) from categories")[0][0]
+    foos_after = Category.count
     assert_equal foos_before, foos_after
   end
 

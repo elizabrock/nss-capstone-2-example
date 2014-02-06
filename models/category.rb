@@ -14,6 +14,11 @@ class Category
     @name = name.strip
   end
 
+  def self.count
+    database = Environment.database_connection
+    database.execute("select count(id) from categories")[0][0]
+  end
+
   def self.all
     database = Environment.database_connection
     database.results_as_hash = true
