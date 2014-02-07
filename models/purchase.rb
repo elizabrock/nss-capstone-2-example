@@ -2,12 +2,9 @@ class Purchase < ActiveRecord::Base
   belongs_to :category
 
   default_scope { order("name ASC") }
+  scope :search, ->(search_term){ where("name LIKE ?", "%#{search_term}%") }
 
   before_create :set_default_category
-
-  def self.search(search_term = nil)
-    Purchase.where("name LIKE ?", "%#{search_term}%").to_a
-  end
 
   def formatted_price
     "$%04.2f" % price
