@@ -6,6 +6,7 @@ Dir.glob(project_root + "/../models/*.rb").each{|f| require f}
 
 require_relative 'database'
 require 'logger'
+require 'yaml'
 
 class Environment
   def self.environment= environment
@@ -14,6 +15,11 @@ class Environment
 
   def self.database_connection
     Database.connection(@@environment)
+  end
+
+  def self.connect_to_database
+    connection_details = YAML::load(File.open('config/database.yml'))
+    ActiveRecord::Base.establish_connection(connection_details[@@environment])
   end
 
   def self.logger
