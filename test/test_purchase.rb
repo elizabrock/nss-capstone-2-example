@@ -1,6 +1,17 @@
 require_relative 'helper'
 
 class TestPurchase < GroceryTest
+  def test_count_when_no_purchases
+    assert_equal 0, Purchase.count
+  end
+
+  def test_count_of_multiple_purchases
+    Purchase.create(name: "foo", calories: 130, price: 1.50)
+    Purchase.create(name: "Corn", calories: 530, price: 1.00)
+    Purchase.create(name: "Cornflakes", calories: 530, price: 1.00)
+    assert_equal 3, Purchase.count
+  end
+
   def test_category_defaults_to_unknown
     purchase = Purchase.create(name: "Foo", price: "1.50", calories: "10")
     assert_equal "Unknown", purchase.category.name

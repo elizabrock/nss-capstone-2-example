@@ -15,6 +15,11 @@ class Purchase
     @calories = calories.to_i
   end
 
+  def self.count
+    database = Environment.database_connection
+    database.execute("select count(id) from purchases")[0][0]
+  end
+
   def self.create(attributes = {})
     purchase = Purchase.new(attributes)
     purchase.save
