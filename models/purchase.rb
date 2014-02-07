@@ -49,7 +49,9 @@ class Purchase
     database.results_as_hash = true
     results = database.execute("select * from purchases where id = #{id}")[0]
     if results
-      purchase = Purchase.new(name: results["name"], price: results["price"], calories: results["calories"])
+      # This is not ideal.  We should be using a find method:
+      category = Category.all.find{ |category| category.id == results["category_id"] }
+      purchase = Purchase.new(name: results["name"], price: results["price"], calories: results["calories"], category: category)
       purchase.send("id=", results["id"])
       purchase
     else
