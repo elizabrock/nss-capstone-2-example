@@ -1,6 +1,24 @@
 require_relative 'helper'
 
 class TestCategories < GroceryTest
+  def test_default_creates_correctly_named_file
+    category = Category.default
+    assert_equal "Unknown", category.name
+    refute category.new_record?
+  end
+
+  def test_default_creates_default_category
+    assert_equal 0, Category.count
+    Category.default
+    assert_equal 1, Category.count
+  end
+
+  def test_default_doesnt_create_duplicate_default
+    category = Category.find_or_create_by(name: "Unknown")
+    assert_equal category.id, Category.default.id
+    assert_equal 1, Category.count
+  end
+
   def test_count_when_no_categories
     assert_equal 0, Category.count
   end
