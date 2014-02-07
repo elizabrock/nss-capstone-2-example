@@ -25,9 +25,9 @@ class TestPurchase < GroceryTest
 
   def test_update_doesnt_insert_new_row
     purchase = Purchase.create(name: "Foo", price: "1.50", calories: "10")
-    foos_before = database.execute("select count(id) from purchases")[0][0]
+    foos_before = Purchase.count
     purchase.update(name: "Bar")
-    foos_after = database.execute("select count(id) from purchases")[0][0]
+    foos_after = Purchase.count
     assert_equal foos_before, foos_after
   end
 
@@ -51,9 +51,9 @@ class TestPurchase < GroceryTest
 
   def test_saved_purchases_are_saved
     purchase = Purchase.new(name: "Foo", price: "1.50", calories: "10")
-    foos_before = database.execute("select count(id) from purchases")[0][0]
+    foos_before = Purchase.count
     purchase.save
-    foos_after = database.execute("select count(id) from purchases")[0][0]
+    foos_after = Purchase.count
     assert_equal foos_before + 1, foos_after
   end
 

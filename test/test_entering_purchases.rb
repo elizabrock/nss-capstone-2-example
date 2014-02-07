@@ -53,15 +53,12 @@ class TestEnteringPurchases < GroceryTest
     results = database.execute("select name, calories, price from purchases")
     expected = ["Cheerios", 210, 1.50]
     assert_equal expected, results[0]
-
-    result = database.execute("select count(id) from purchases")
-    assert_equal 1, result[0][0]
+    assert_equal 1, Purchase.count
   end
 
   def test_invalid_purchase_doesnt_get_saved
     execute_popen("./grocerytracker add Cheerios --calories 210")
-    result = database.execute("select count(id) from purchases")
-    assert_equal 0, result[0][0]
+    assert_equal 0, Purchase.count
   end
 
   def test_error_message_for_missing_price
