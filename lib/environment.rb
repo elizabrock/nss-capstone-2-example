@@ -1,6 +1,10 @@
+require 'rubygems'
+require 'bundler/setup'
+
+project_root = File.dirname(File.absolute_path(__FILE__))
+Dir.glob(project_root + "/../models/*.rb").each{|f| require f}
+
 require_relative 'database'
-require_relative '../models/purchase'
-require_relative '../models/category'
 require 'logger'
 
 class Environment

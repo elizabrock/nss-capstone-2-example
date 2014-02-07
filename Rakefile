@@ -2,6 +2,7 @@
 # -*- ruby -*-
 
 require_relative 'lib/environment'
+
 require 'rake/testtask'
 Rake::TestTask.new() do |t|
   t.pattern = "test/test_*.rb"
