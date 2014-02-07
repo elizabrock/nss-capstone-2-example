@@ -8,6 +8,7 @@ class GroceryTest < MiniTest::Unit::TestCase
   end
 
   def teardown
+    # The Database Cleaner gem can do this for us:
     Purchase.destroy_all
     Category.destroy_all
   end

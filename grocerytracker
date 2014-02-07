@@ -12,22 +12,24 @@ class GroceryTracker
   def initialize
     @options = ArgumentParser.parse
     Environment.environment = @options[:environment] || "production"
+    @options.delete(:environment)
   end
 
   def main
-    database = Environment.database_connection
+    Environment.connect_to_database
 
-    if options[:command] == "search"
+    command = options.delete(:command)
+    if command == "search"
       search_term = ask("What do you want to search for?")
       search_purchases_for(search_term)
-    elsif options[:command] == "add"
+    elsif command == "add"
       add_purchase()
-    elsif options[:command] == "list"
+    elsif command == "list"
       list_purchases()
-    elsif options[:command] == "edit"
-      if purchase = Purchase.find(options[:id])
+    elsif command == "edit"
+      if purchase = Purchase.find_by(id: options[:id])
         purchase.update(options)
-        puts "Purchase #{purchase.id} is now named #{purchase.name}, with #{purchase.calories} calories and $#{purchase.price} cost."
+        puts "Purchase #{purchase.id} is now named #{purchase.name}, with #{purchase.calories} calories and #{purchase.formatted_price} cost."
       else
         puts "Purchase #{options[:id]} couldn't be found."
       end
@@ -52,7 +54,7 @@ class GroceryTracker
     if error_messages.empty?
       purchase = Purchase.new(options)
       purchase.save
-      puts "A purchase named #{purchase.name} (#{purchase.category.name}), with #{purchase.calories} calories and $#{purchase.price} cost was created."
+      puts "A purchase named #{purchase.name} (#{purchase.category.name}), with #{purchase.calories} calories and #{purchase.formatted_price} cost was created."
     else
       puts error_messages.join(" ")
     end

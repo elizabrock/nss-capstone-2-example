@@ -8,9 +8,9 @@ class Importer
   end
 
   def self.import_product(row_hash)
-    category = Category.find_or_create_by(name: row_hash["category"])
+    category = Category.find_or_create_by(name: row_hash["category"].strip)
     purchase = Purchase.create(
-      name: row_hash["product"],
+      name: row_hash["product"].strip,
       calories: row_hash["calories"].to_i,
       price: row_hash["price"].to_f,
       category: category
