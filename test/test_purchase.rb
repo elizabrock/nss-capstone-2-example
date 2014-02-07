@@ -36,7 +36,7 @@ class TestPurchase < GroceryTest
     id = purchase.id
     purchase.update(name: "Bar", price: "2.50", calories: "20")
     updated_purchase = Purchase.find(id)
-    expected = ["Bar", "2.50", 20 ]
+    expected = ["Bar", 2.50, 20 ]
     actual = [ updated_purchase.name, updated_purchase.price, updated_purchase.calories]
     assert_equal expected, actual
   end
@@ -44,7 +44,7 @@ class TestPurchase < GroceryTest
   def test_update_is_reflected_in_existing_instance
     purchase = Purchase.create(name: "Foo", price: "1.50", calories: "10")
     purchase.update(name: "Bar", price: "2.50", calories: "20")
-    expected = ["Bar", "2.50", 20 ]
+    expected = ["Bar", 2.50, 20 ]
     actual = [ purchase.name, purchase.price, purchase.calories]
     assert_equal expected, actual
   end
@@ -77,10 +77,6 @@ class TestPurchase < GroceryTest
     purchase.save
     category_id = Purchase.find(purchase.id).category.id
     assert_equal category2.id, category_id, "Category2.id and purchase.category_id should be the same"
-  end
-
-  def test_find_returns_nil_if_unfindable
-    assert_nil Purchase.find(12342)
   end
 
   def test_find_returns_the_row_as_purchase_object

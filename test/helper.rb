@@ -8,7 +8,7 @@ class GroceryTest < MiniTest::Unit::TestCase
   end
 
   def teardown
-    # database.execute("delete from purchases")
+    Purchase.destroy_all
     Category.destroy_all
   end
 
