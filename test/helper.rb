@@ -4,15 +4,12 @@ require_relative '../lib/environment'
 class GroceryTest < MiniTest::Unit::TestCase
   def setup
     Environment.environment = "test"
-  end
-
-  def database
-    Environment.database_connection
+    Environment.connect_to_database
   end
 
   def teardown
-    database.execute("delete from purchases")
-    database.execute("delete from categories")
+    # database.execute("delete from purchases")
+    Category.destroy_all
   end
 
   def execute_popen command

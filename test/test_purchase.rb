@@ -63,15 +63,15 @@ class TestPurchase < GroceryTest
   end
 
   def test_save_saves_category_id
-    category = Category.find_or_create("Meats")
+    category = Category.find_or_create_by(name: "Meats")
     purchase = Purchase.create(name: "Foo", price: "1.50", calories: "10", category: category)
     category_id = Purchase.find(purchase.id).category.id
     assert_equal category.id, category_id, "Category.id and purchase.category_id should be the same"
   end
 
   def test_save_update_category_id
-    category1 = Category.find_or_create("Meats")
-    category2 = Category.find_or_create("Veggies")
+    category1 = Category.find_or_create_by(name: "Meats")
+    category2 = Category.find_or_create_by(name: "Veggies")
     purchase = Purchase.create(name: "Foo", price: "1.50", calories: "10", category: category1)
     purchase.category = category2
     purchase.save
@@ -84,7 +84,7 @@ class TestPurchase < GroceryTest
   end
 
   def test_find_returns_the_row_as_purchase_object
-    category = Category.find_or_create("Things")
+    category = Category.find_or_create_by(name: "Things")
     purchase = Purchase.create(name: "Foo", price: "1.50", calories: "10", category: category)
     found = Purchase.find(purchase.id)
     # Ideally: assert_equal purchase, found
@@ -96,7 +96,7 @@ class TestPurchase < GroceryTest
   end
 
   def test_find_returns_the_purchase_with_correct_category
-    category = Category.find_or_create("Things")
+    category = Category.find_or_create_by(name: "Things")
     purchase = Purchase.create(name: "Foo", price: "1.50", calories: "10", category: category)
     found = Purchase.find(purchase.id)
     refute_equal Category.default.id, found.category.id
